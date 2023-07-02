@@ -1,8 +1,8 @@
 project(
   'hcxtools',
-  'c',
+  'cpp',
   version: '6.3.1',
-  default_options: ['warning_level=3'],
+  default_options: ['c_std=c++14', 'warning_level=3'],
 )
 
 vyear = 2023
@@ -18,17 +18,17 @@ else
   endif
 endif
 
-add_project_arguments('-DVERSION_TAG="@0@"'.format(vtag), language: 'c')
-add_project_arguments('-DVERSION_YEAR="@0@"'.format(vyear), language: 'c')
+add_project_arguments('-DVERSION_TAG="@0@"'.format(vtag), language: 'cpp')
+add_project_arguments('-DVERSION_YEAR="@0@"'.format(vyear), language: 'cpp')
 
-cc = meson.get_compiler('c')
+cc = meson.get_compiler('cpp')
 
 curl_dep = dependency('libcurl', required: get_option('curl'))
 openssl_dep = dependency('openssl', required: get_option('openssl'))
 winsock_dep = cc.find_library('ws2_32', required: host_machine.system() == 'windows')
 zlib_dep = dependency('zlib', required: get_option('zlib'))
 if zlib_dep.found()
-  add_project_arguments('-DWANTZLIB', language: 'c')
+  add_project_arguments('-DWANTZLIB', language: 'cpp')
 endif
 
 tools = {
@@ -58,7 +58,7 @@ endif
 foreach t, d : tools
   executable(
     t,
-    '@0@.c'.format(t),
+    '@0@.cc'.format(t),
     dependencies: d,
     install: true,
   )
